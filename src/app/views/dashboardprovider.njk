@@ -1,0 +1,39 @@
+{% extends "_layouts/default.njk" %}
+
+{% block body %}
+    <div class="content" >
+        <strong>Olá, {{ user.name }}</strong>
+        <p>Segue sua lista de agendamentos:</p>
+
+        <input type="text" class="flatpickr" placeholder="Escolha uma data">
+        <ul class="providers">
+            {% for appointment in appointments %}
+                <li class="provider">
+                    <div>
+                        <img src="/files/{{ appointment.user.avatar }}" />
+                        <strong>{{ appointment.user.name }}</strong>
+                        <strong>{{ appointment.date }}</strong>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <a href="/app/logout" class="logout">Sair</a>
+    </div>
+
+        <script type="text/javascript">
+        flatpickr('.flatpickr', {
+            minDate: new Date(),
+            dateFormat: 'd/m/Y',
+            onChange: function (date) {
+                fetch(`/app/provider/appointments/{{ appointments.provider.id }}?date=${date[0].getDate()}`).then(function (response) {
+                    response.text().then(function (html) {
+                        console.log(html)
+                        document.getElementById('hours').innerHTML = html
+                    })
+                })
+            }
+        })
+    </script>
+
+{% endblock %}
