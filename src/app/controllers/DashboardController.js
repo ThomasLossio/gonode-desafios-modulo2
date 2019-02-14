@@ -1,4 +1,6 @@
 const { User, Appointment } = require('../models')
+const { Op } = require('sequelize')
+const moment = require('moment')
 
 class DashboardController {
   async index (req, res) {
@@ -10,8 +12,20 @@ class DashboardController {
   async indexProviders (req, res) {
     const { id } = req.session.user
     const appointments = await Appointment.findAll({
-      where: { provider_id: id },
-      include: [{ all: true }],
+      where: {
+        provider_id: id,
+        date: {
+          [Op.between]: [
+            moment()
+              .startOf('day')
+              .format(),
+            moment()
+              .endOf('day')
+              .format()
+          ]
+        }
+      },
+      include: [{ model: User, as: 'user' }],
       order: ['date']
     })
 

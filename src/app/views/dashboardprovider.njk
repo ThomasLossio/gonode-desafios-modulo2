@@ -11,8 +11,7 @@
                 <li class="provider">
                     <div>
                         <img src="/files/{{ appointment.user.avatar }}" />
-                        <strong>{{ appointment.user.name }}</strong>
-                        <strong>{{ appointment.date }}</strong>
+                        <strong>{{ appointment.user.name }} <br> {{ appointment.date | date("HH:mm") }}</strong>
                     </div>
                 </li>
             {% endfor %}
